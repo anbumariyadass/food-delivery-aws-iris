@@ -1,0 +1,1 @@
+export const BASE_API = 'https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev';

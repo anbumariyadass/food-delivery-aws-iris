@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Layout from './Layout';
 import axios from 'axios';
 import '../styles/RestaurantPage.css';
+import { BASE_API } from '../config'; 
 
 const DeliveryPersonalPage = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -17,19 +18,19 @@ const DeliveryPersonalPage = () => {
   };
 
   const fetchInfo = () => {
-    axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/delivery/getDeliveryPersonal', tokenHeader)
+    axios.get(`${BASE_API}/delivery/getDeliveryPersonal`, tokenHeader)
       .then(res => setInfo(res.data.data))
       .catch(() => setInfo(null));
   };
 
   const fetchOrders = () => {
-    axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/delivery/personal/orders', tokenHeader)
+    axios.get(`${BASE_API}/delivery/personal/orders`, tokenHeader)
       .then(res => setOrders(res.data.data))
       .catch(err => console.error(err));
   };
 
   const updateOrderStatus = (orderId, newStatus) => {
-    axios.put(`https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/delivery/${orderId}/updateOrderStatus?orderStatus=${newStatus}`, {}, tokenHeader)
+    axios.put(`${BASE_API}/delivery/${orderId}/updateOrderStatus?orderStatus=${newStatus}`, {}, tokenHeader)
       .then(() => fetchOrders())
       .catch(err => alert('Update Failed'));
   };

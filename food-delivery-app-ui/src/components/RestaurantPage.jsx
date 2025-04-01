@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Layout from './Layout';
 import axios from 'axios';
 import '../styles/RestaurantPage.css';
+import { BASE_API } from '../config'; 
 
 const RestaurantPage = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -81,7 +82,7 @@ const RestaurantPage = () => {
   
   const handleUpdateRestaurant = async () => {
     try {      
-      await axios.put('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/restaurant/update', formData, {
+      await axios.put(`${BASE_API}/restaurant/update`, formData, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
@@ -91,7 +92,7 @@ const RestaurantPage = () => {
       setShowEditModal(false);
   
       // Refresh after update
-      const response = await axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/restaurant/myDetail', tokenHeader);
+      const response = await axios.get(`${BASE_API}/restaurant/myDetail`, tokenHeader);
       setRestaurantInfo(response.data.data);
     } catch (err) {
       console.error(err);
@@ -101,7 +102,7 @@ const RestaurantPage = () => {
 
   const handleSaveDishes = async () => {
     try {
-      const response = await axios.put('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/restaurant/dishes', dishesData, {
+      const response = await axios.put(`${BASE_API}/restaurant/dishes`, dishesData, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
@@ -111,7 +112,7 @@ const RestaurantPage = () => {
       setShowDishModal(false);
   
       // Refresh restaurant info
-      const updated = await axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/restaurant/myDetail', tokenHeader);
+      const updated = await axios.get(`${BASE_API}/restaurant/myDetail`, tokenHeader);
       setRestaurantInfo(updated.data.data);
     } catch (err) {
       console.error(err);
@@ -122,13 +123,13 @@ const RestaurantPage = () => {
   const updateOrderStatus = (orderId, newStatus) => {
     const updateOrderAndDelivery = () => {
       const orderApi = axios.put(
-        `https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/order/${orderId}/updateOrderStatus?orderStatus=${newStatus}`,
+        `${BASE_API}/order/${orderId}/updateOrderStatus?orderStatus=${newStatus}`,
         {},
         tokenHeader
       );
   
       const deliveryApi = axios.put(
-        `https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/delivery/${orderId}/updateOrderStatus?orderStatus=${newStatus}`,
+        `${BASE_API}/delivery/${orderId}/updateOrderStatus?orderStatus=${newStatus}`,
         {},
         tokenHeader
       );
@@ -146,7 +147,7 @@ const RestaurantPage = () => {
   
     if (newStatus === 'ACKNOWLEDGED') {
       // Step 1: Process Orders (POST) if newStatus is ACKNOWLEDGED
-      axios.post('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/delivery/processOrders', {}, tokenHeader)
+      axios.post(`${BASE_API}/delivery/processOrders`, {}, tokenHeader)
         .then(() => {
           console.log('Orders processed');
           updateOrderAndDelivery(); // Continue with Step 2 and 3
@@ -164,7 +165,7 @@ const RestaurantPage = () => {
   
 
   const fetchOrders = () => {
-    axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/order/restaurant', tokenHeader)
+    axios.get(`${BASE_API}/order/restaurant`, tokenHeader)
         .then(res => setOrders(res.data.data))
         .catch(err => console.error(err));
   };
@@ -173,7 +174,7 @@ const RestaurantPage = () => {
 
   useEffect(() => {
     if (activeTab === 'info') {
-      axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/restaurant/myDetail', tokenHeader)
+      axios.get(`${BASE_API}/restaurant/myDetail`, tokenHeader)
         .then(res => setRestaurantInfo(res.data.data))
         .catch(err => console.error(err));
     }

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/AuthPage.css';
+import { BASE_API } from '../config'; 
 
 const Signup = () => {
   const [username, setUsername] = useState('');
@@ -21,7 +22,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await axios.post('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/identity/register/customer', {
+      const response = await axios.post(`${BASE_API}/identity/register/customer`, {
         username,
         password,       
         active: "Y",

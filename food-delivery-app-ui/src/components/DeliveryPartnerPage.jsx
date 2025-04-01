@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Layout from './Layout';
 import axios from 'axios';
 import '../styles/RestaurantPage.css';
+import { BASE_API } from '../config'; 
 
 const DeliveryPartnerPage = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -36,7 +37,7 @@ const DeliveryPartnerPage = () => {
   };
 
   const fetchInfo = () => {
-    axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/delivery/getDeliveryPartner', tokenHeader)
+    axios.get(`${BASE_API}/delivery/getDeliveryPartner`, tokenHeader)
     .then(res => {
       if (res.data?.data) {
         setInfo(res.data.data);
@@ -55,19 +56,19 @@ const DeliveryPartnerPage = () => {
   };
 
   const fetchOrders = () => {
-    axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/delivery/myorders', tokenHeader)
+    axios.get(`${BASE_API}/delivery/myorders`, tokenHeader)
       .then(res => setOrders(res.data.data))
       .catch(err => console.error(err));
   };
 
   const fetchDeliveryPersonals = () => {
-    axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/delivery/allDeliveryPersonal', tokenHeader)
+    axios.get(`${BASE_API}/delivery/allDeliveryPersonal`, tokenHeader)
       .then(res => setDeliveryPersonals(res.data.data))
       .catch(err => console.error(err));
   };
 
   const processOrders = () => {
-    axios.post('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/delivery/processOrders', {}, tokenHeader)
+    axios.post(`${BASE_API}/delivery/processOrders`, {}, tokenHeader)
       .then(() => {
         console.log('Orders processed');
         fetchOrders();
@@ -76,7 +77,7 @@ const DeliveryPartnerPage = () => {
   };
 
   const handleSave = () => {
-    axios.post('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/delivery/saveDlvryPartner', formData, tokenHeader)
+    axios.post(`${BASE_API}/delivery/saveDlvryPartner`, formData, tokenHeader)
       .then(() => {
         alert('Saved Successfully');
         fetchInfo();
@@ -89,14 +90,14 @@ const DeliveryPartnerPage = () => {
   };
 
   const updateOrderStatus = (orderId, newStatus) => {
-    axios.put(`https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/delivery/${orderId}/updateOrderStatus?orderStatus=${newStatus}`, {}, tokenHeader)
+    axios.put(`${BASE_API}/delivery/${orderId}/updateOrderStatus?orderStatus=${newStatus}`, {}, tokenHeader)
       .then(() => fetchOrders())
       .catch(err => alert('Update Failed'));
   };
 
   const handleSavePersonal = () => {
     const savePersonal = () => {
-      axios.post('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/delivery/saveDlvryPersonal', personalForm, tokenHeader)
+      axios.post(`${BASE_API}/delivery/saveDlvryPersonal`, personalForm, tokenHeader)
         .then(() => {
           alert('Personal saved successfully');
           fetchDeliveryPersonals();
@@ -112,7 +113,7 @@ const DeliveryPartnerPage = () => {
         active: 'Y'
       };
   
-      axios.post('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/identity/register/deliveryPersonal', identityPayload, tokenHeader)
+      axios.post(`${BASE_API}/identity/register/deliveryPersonal`, identityPayload, tokenHeader)
         .then(() => savePersonal())
         .catch(() => alert('User registration failed'));
     } else {
@@ -121,7 +122,7 @@ const DeliveryPartnerPage = () => {
   };
 
   const handleDeletePersonal = (userName) => {
-    axios.delete(`https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/delivery/delete/deliveryPersonal/${userName}`, tokenHeader)
+    axios.delete(`${BASE_API}/delivery/delete/deliveryPersonal/${userName}`, tokenHeader)
       .then(() => {
         alert('Deleted successfully');
         fetchDeliveryPersonals();
@@ -131,7 +132,7 @@ const DeliveryPartnerPage = () => {
 
   const assignDeliveryPersonal = async (orderId, userName) => {   
     try {
-      await axios.put(`https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/delivery/${orderId}/assignDeliveryPersonal?userName=${userName}`, {}, tokenHeader);     
+      await axios.put(`${BASE_API}/delivery/${orderId}/assignDeliveryPersonal?userName=${userName}`, {}, tokenHeader);     
       alert('Assigned successfully');
       fetchOrders();
     } catch (error) {

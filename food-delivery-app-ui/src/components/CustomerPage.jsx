@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Layout from './Layout';
 import '../styles/CustomerPage.css';
+import { BASE_API } from '../config'; 
 
 const CustomerPage = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -59,7 +60,7 @@ const CustomerPage = () => {
   const fetchRestaurants = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/restaurant/customer/order', {
+      const response = await axios.get(`${BASE_API}/restaurant/customer/order`, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
@@ -75,7 +76,7 @@ const CustomerPage = () => {
   const fetchCart = async () => {
     try {
       setCartLoading(true);
-      const response = await axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/cart/mycart', {
+      const response = await axios.get(`${BASE_API}/cart/mycart`, {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
       setCart(response.data.data);
@@ -89,7 +90,7 @@ const CustomerPage = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/order/customer', {
+      const response = await axios.get(`${BASE_API}/order/customer`, {
         headers: {
           Authorization: `Bearer ${user?.token}`
         }
@@ -102,7 +103,7 @@ const CustomerPage = () => {
 
   const fetchCustomerProfile = async () => {
     try {
-      const response = await axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/customer/get', {
+      const response = await axios.get(`${BASE_API}/customer/get`, {
         headers: { Authorization: `Bearer ${user?.token}` }
       });
       if (response.data && response.data.data) {
@@ -125,7 +126,7 @@ const CustomerPage = () => {
 
   const handleTrackOrder = async (orderId) => {
     try {
-      const response = await axios.get(`https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/delivery/${orderId}/trackOrder`, {
+      const response = await axios.get(`${BASE_API}/delivery/${orderId}/trackOrder`, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
@@ -142,7 +143,7 @@ const CustomerPage = () => {
 
   const handleClearCart = async () => {
     try {
-      await axios.delete('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/cart/mycart', {
+      await axios.delete(`${BASE_API}/cart/mycart`, {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
       setCart(null);
@@ -168,7 +169,7 @@ const CustomerPage = () => {
     const updatedCart = { ...cart, dishes: updatedDishes };
   
     try {
-      const res = await axios.post('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/cart/save', updatedCart, {
+      const res = await axios.post(`${BASE_API}/cart/save`, updatedCart, {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
       alert('Item removed from cart.');
@@ -193,12 +194,12 @@ const CustomerPage = () => {
     setShowOrderModal(true);
   
     try {
-      const partnerRes = await axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/delivery/getAllDeliveryPartners', {
+      const partnerRes = await axios.get(`${BASE_API}/delivery/getAllDeliveryPartners`, {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
       setDeliveryPartners(partnerRes.data.data);
   
-      const userRes = await axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/customer/get', {
+      const userRes = await axios.get(`${BASE_API}/customer/get`, {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
       const info = userRes.data.data;
@@ -241,12 +242,12 @@ const CustomerPage = () => {
     };
   
     try {
-      const res = await axios.post('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/order/create', orderPayload, {
+      const res = await axios.post(`${BASE_API}/order/create`, orderPayload, {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
 
       // Clear the cart via DELETE API
-      await axios.delete('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/cart/mycart', {
+      await axios.delete(`${BASE_API}/cart/mycart`, {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
       alert(`Order placed successfully! Order ID: ${res.data.data.orderId}`);
@@ -354,7 +355,7 @@ const CustomerPage = () => {
 
   const openDishModal = async (restaurant) => {
     try {
-      const cartRes = await axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/cart/mycart', {
+      const cartRes = await axios.get(`${BASE_API}/cart/mycart`, {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
   
@@ -390,7 +391,7 @@ const CustomerPage = () => {
     };
   
     try {
-      const res = await axios.post('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/cart/save', cartPayload, {
+      const res = await axios.post(`${BASE_API}/cart/save`, cartPayload, {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
       alert(res.data.message);
@@ -406,7 +407,7 @@ const CustomerPage = () => {
     if (!window.confirm('Are you sure you want to delete the entire cart?')) return;
   
     try {
-      await axios.delete('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/cart/mycart', {
+      await axios.delete(`${BASE_API}/cart/mycart`, {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
       alert('Cart deleted successfully.');
@@ -443,7 +444,7 @@ const CustomerPage = () => {
   
   const resetToSavedCart = async () => {
     try {
-      const response = await axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/cart/mycart', {
+      const response = await axios.get(`${BASE_API}/cart/mycart`, {
         headers: {
           Authorization: `Bearer ${user?.token}`
         }
@@ -457,7 +458,7 @@ const CustomerPage = () => {
 
   const handleProfileUpdate = async () => {
     try {
-      await axios.post('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/customer/save', profile, {
+      await axios.post(`${BASE_API}/customer/save`, profile, {
         headers: { Authorization: `Bearer ${user?.token}` }
       });
       alert("Profile updated successfully!");
@@ -468,7 +469,7 @@ const CustomerPage = () => {
   
   const openDishModalFromCart = async (existingCart) => {
     try {
-      const res = await axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/restaurant/customer/order', {
+      const res = await axios.get(`${BASE_API}/restaurant/customer/order`, {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
   

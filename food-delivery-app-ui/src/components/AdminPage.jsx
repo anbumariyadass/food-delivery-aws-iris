@@ -3,6 +3,7 @@ import axios from 'axios';
 import LogoutButton from './LogoutButton';
 import '../styles/AdminPage.css';
 import Layout from './Layout';
+import { BASE_API } from '../config'; 
 
 const AdminPage = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -24,7 +25,7 @@ const AdminPage = () => {
 
   const fetchRestaurants = async () => {
     try {
-      const response = await axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/restaurant/all', {
+      const response = await axios.get(`${BASE_API}/restaurant/all`, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
@@ -37,7 +38,7 @@ const AdminPage = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/identity/allUsers', {
+      const response = await axios.get(`${BASE_API}/identity/allUsers`, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
@@ -50,7 +51,7 @@ const AdminPage = () => {
 
   const fetchDeliveryPartners = async () => {
     try {
-      const response = await axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/delivery/getAllDeliveryPartners', {
+      const response = await axios.get(`${BASE_API}/delivery/getAllDeliveryPartners`, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
@@ -63,7 +64,7 @@ const AdminPage = () => {
 
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get('https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/customer/getAll', {
+      const response = await axios.get(`${BASE_API}/customer/getAll`, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
@@ -83,7 +84,7 @@ const AdminPage = () => {
   
     try {
       const response = await axios.post(
-        'https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/sqssns/notification/publishMessage',
+        `${BASE_API}/sqssns/notification/publishMessage`,
         notification,
         {
           headers: {
@@ -108,7 +109,7 @@ const AdminPage = () => {
   
     try {
       const response = await axios.post(
-        `https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/sqssns/notification/addSubscription/${subscriberEmail}`,
+        `${BASE_API}/sqssns/notification/addSubscription/${subscriberEmail}`,
         {},
         {
           headers: {
@@ -134,7 +135,7 @@ const AdminPage = () => {
   
     try {
       const response = await axios.post(
-        'https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/identity/register',
+        `${BASE_API}/identity/register`,
         {
           username: newUser.username,
           password: newUser.password,
@@ -164,7 +165,7 @@ const AdminPage = () => {
     if (!confirmDelete) return;
   
     try {
-      await axios.delete(`https://xgw73fdze7.execute-api.ap-south-1.amazonaws.com/dev/identity/deleteUser`, {
+      await axios.delete(`${BASE_API}/identity/deleteUser`, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
@@ -220,6 +221,7 @@ const AdminPage = () => {
                 <option value="ADMIN">ADMIN</option>
                 <option value="RESTAURANT">RESTAURANT</option>
                 <option value="DELIVERY_PARTNER">DELIVERY_PARTNER</option>
+                <option value="DELIVERY_PERSONAL">DELIVERY_PERSONAL</option>
                 <option value="CUSTOMER">CUSTOMER</option>
               </select>
             </div>
