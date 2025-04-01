@@ -1,4 +1,4 @@
-package org.example;
+package com.iris.food_delivery.cart_service;
 
 
 import com.amazonaws.serverless.exceptions.ContainerInitializationException;
